@@ -10,4 +10,5 @@ object Constants {
     const val ERROR_PASSWORD_IS_TOO_SHORT = "Too Short Password "
     const val ACCOUNT_CREATED = "Account Created"
     const val ERROR_PASSWORD_OR_EMAIL_INCORRECT = "Wrong email or password"
+    const val ERROR_USER_NOT_FOUND = "User not found"
 }

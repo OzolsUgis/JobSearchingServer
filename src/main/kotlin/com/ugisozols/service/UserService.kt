@@ -19,6 +19,9 @@ class UserService(
         return userRepository.getUserByEmail(email)
     }
 
+
+
+
     suspend fun userWithThatEmailAlreadyExists(email : String) : Boolean{
         return userRepository.getUserByEmail(email) != null
     }

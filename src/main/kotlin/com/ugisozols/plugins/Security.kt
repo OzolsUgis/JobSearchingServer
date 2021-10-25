@@ -24,6 +24,7 @@ fun Application.configureSecurity() {
                         .build()
                 )
                 validate { credential ->
+                    log.info("Validation process started")
                     if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
                 }
             }

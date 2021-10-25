@@ -21,6 +21,7 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.litote.kmongo.MongoOperator
 import java.util.*
 
 
@@ -31,7 +32,7 @@ fun Route.createUser(userService: UserService){
             return@post
         }
         if (userService.userWithThatEmailAlreadyExists(request.email)){
-            call.respond(MainApiResponse(
+            call.respond(MainApiResponse<Unit>(
                 successful = false,
                 message = ERROR_EMAIL_ALREADY_EXISTS
             ))
@@ -39,28 +40,28 @@ fun Route.createUser(userService: UserService){
         }
         when(userService.validateCreateUser(request)){
             is ValidationState.ErrorFieldEmpty -> {
-                call.respond(MainApiResponse(
+                call.respond(MainApiResponse<Unit>(
                     successful = false,
                     message = ERROR_FIELDS_EMPTY
                 ))
                 return@post
             }
             is ValidationState.ErrorEmailIsNotContainingChars -> {
-                call.respond(MainApiResponse(
+                call.respond(MainApiResponse<Unit>(
                     successful = false,
                     message = ERROR_EMAIL_DOES_NOT_CONTAIN_EMAIL_CHARS
                 ))
                 return@post
             }
             is ValidationState.ErrorPasswordsAreNotEqual -> {
-                call.respond(MainApiResponse(
+                call.respond(MainApiResponse<Unit>(
                     successful = false,
                     message = ERROR_PASSWORDS_DO_NOT_MATCH
                 ))
                 return@post
             }
             is ValidationState.ErrorPasswordToShort -> {
-                call.respond(MainApiResponse(
+                call.respond(MainApiResponse<Unit>(
                     successful = false,
                     message = ERROR_PASSWORD_IS_TOO_SHORT
                 ))
@@ -68,7 +69,7 @@ fun Route.createUser(userService: UserService){
             }
             is ValidationState.Success -> {
                 userService.createUser(request)
-                call.respond(MainApiResponse(
+                call.respond(MainApiResponse<Unit>(
                     successful = true,
                     message = ACCOUNT_CREATED
                 ))
@@ -93,7 +94,7 @@ fun Route.loginUser(
         if(request.email.isBlank() || request.password.isBlank()){
             call.respond(
                 HttpStatusCode.BadRequest,
-                MainApiResponse(
+                MainApiResponse<Unit>(
                     false,
                     message = ERROR_FIELDS_EMPTY
                 )
@@ -103,13 +104,12 @@ fun Route.loginUser(
         val user = userService.getUserByEmail(request.email)?: kotlin.run {
             call.respond(
                 HttpStatusCode.OK,
-                MainApiResponse(
+                MainApiResponse<Unit>(
                     false,
                     ERROR_PASSWORD_OR_EMAIL_INCORRECT
                 )
             )
             return@post
-
         }
 
         val passwordIsCorrect = userService.checkForPassword(
@@ -124,7 +124,7 @@ fun Route.loginUser(
             val token = JWT.create()
                 .withAudience(jwtAudience)
                 .withIssuer(jwtIssuer)
-                .withClaim("email", user.email)
+                .withClaim("userId", user.id)
                 .withExpiresAt(Date(System.currentTimeMillis() + expiresIn))
                 .sign(Algorithm.HMAC256(jwtSecret))
             call.respond(
@@ -137,7 +137,7 @@ fun Route.loginUser(
         } else {
             call.respond(
                 HttpStatusCode.OK,
-                MainApiResponse(
+                MainApiResponse<Unit>(
                     false,
                     ERROR_PASSWORD_OR_EMAIL_INCORRECT
                 )
