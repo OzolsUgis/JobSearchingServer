@@ -1,7 +1,10 @@
 package com.ugisozols.routes
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.ugisozols.data.requests.AccountRequest
 import com.ugisozols.data.requests.CreateAccountRequest
+import com.ugisozols.data.responses.AuthResponse
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.service.UserService
 import com.ugisozols.util.Constants
@@ -18,6 +21,7 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import java.util.*
 
 
 fun Route.createUser(userService: UserService){
@@ -74,7 +78,13 @@ fun Route.createUser(userService: UserService){
     }
 }
 
-fun Route.loginUser(userService: UserService){
+fun Route.loginUser(
+    userService: UserService,
+    jwtIssuer :String,
+    jwtAudience : String,
+    jwtSecret : String
+
+){
     post("api/userAuth/loginUser") {
         val request  = call.receiveOrNull<AccountRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest)
@@ -107,8 +117,31 @@ fun Route.loginUser(userService: UserService){
             passwordToCheck = request.password
         )
 
-        if(passwordIsCorrect){
 
+
+        if(passwordIsCorrect){
+            val expiresIn = 1000L * 60L * 60L * 24L * 365L
+            val token = JWT.create()
+                .withAudience(jwtAudience)
+                .withIssuer(jwtIssuer)
+                .withClaim("email", user.email)
+                .withExpiresAt(Date(System.currentTimeMillis() + expiresIn))
+                .sign(Algorithm.HMAC256(jwtSecret))
+            call.respond(
+                HttpStatusCode.OK,
+                AuthResponse(
+                    userId = user.id,
+                    token = token
+                )
+            )
+        } else {
+            call.respond(
+                HttpStatusCode.OK,
+                MainApiResponse(
+                    false,
+                    ERROR_PASSWORD_OR_EMAIL_INCORRECT
+                )
+            )
         }
     }
 }
