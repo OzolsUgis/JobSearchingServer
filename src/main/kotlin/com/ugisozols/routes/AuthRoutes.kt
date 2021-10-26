@@ -6,8 +6,8 @@ import com.ugisozols.data.requests.AccountRequest
 import com.ugisozols.data.requests.CreateAccountRequest
 import com.ugisozols.data.responses.AuthResponse
 import com.ugisozols.data.responses.MainApiResponse
+
 import com.ugisozols.service.UserService
-import com.ugisozols.util.Constants
 import com.ugisozols.util.Constants.ACCOUNT_CREATED
 import com.ugisozols.util.Constants.ERROR_EMAIL_ALREADY_EXISTS
 import com.ugisozols.util.Constants.ERROR_EMAIL_DOES_NOT_CONTAIN_EMAIL_CHARS
@@ -21,7 +21,6 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import org.litote.kmongo.MongoOperator
 import java.util.*
 
 
@@ -122,16 +121,20 @@ fun Route.loginUser(
         if(passwordIsCorrect){
             val expiresIn = 1000L * 60L * 60L * 24L * 365L
             val token = JWT.create()
+                .withClaim("userId", user.id)
                 .withAudience(jwtAudience)
                 .withIssuer(jwtIssuer)
-                .withClaim("userId", user.id)
                 .withExpiresAt(Date(System.currentTimeMillis() + expiresIn))
                 .sign(Algorithm.HMAC256(jwtSecret))
+            val decToken = JWT.decode(token)
             call.respond(
                 HttpStatusCode.OK,
-                AuthResponse(
-                    userId = user.id,
-                    token = token
+                MainApiResponse(
+                    true,
+                    data = AuthResponse(
+                        userId = user.id,
+                        token= token
+                    )
                 )
             )
         } else {

@@ -1,5 +1,4 @@
 package com.ugisozols.routes
-
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.service.ProfileService
 import com.ugisozols.util.Constants.ERROR_USER_NOT_FOUND
@@ -10,19 +9,21 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
+
 fun Route.getUserProfile(
     profileService: ProfileService
 ){
     authenticate {
-        get("api/user/profile"){
+        get("api/user/profile") {
+            val userId = call.parameters[QueryParameters.QUERY_PARAM_USER_ID]
+            if (userId == null || userId.isBlank()) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
 
-            val userIdQuery = call.parameters[QueryParameters.QUERY_PARAM_USER_ID]
-           if(userIdQuery == null || userIdQuery.isBlank()){
-               call.respond(HttpStatusCode.BadRequest)
-               return@get
-           }
-            val callResponse = profileService.getUsersProfile(userId = userIdQuery)
-            if(callResponse == null){
+            val callResponse = profileService.getUsersProfile(userId = userId)
+
+            if (callResponse == null) {
                 call.respond(
                     HttpStatusCode.OK,
                     MainApiResponse<Unit>(
@@ -32,6 +33,7 @@ fun Route.getUserProfile(
                 )
                 return@get
             }
+
             call.respond(
                 HttpStatusCode.OK,
                 MainApiResponse(
@@ -39,7 +41,6 @@ fun Route.getUserProfile(
                     data = callResponse
                 )
             )
-
         }
     }
 }
