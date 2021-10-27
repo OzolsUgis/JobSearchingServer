@@ -1,9 +1,6 @@
 package com.ugisozols.plugins
 
-import com.ugisozols.routes.createUser
-import com.ugisozols.routes.getUserProfile
-import com.ugisozols.routes.loginUser
-import com.ugisozols.service.ProfileService
+import com.ugisozols.routes.*
 import com.ugisozols.service.UserService
 import io.ktor.routing.*
 import io.ktor.application.*
@@ -16,12 +13,12 @@ fun Application.configureRouting() {
     val audience = environment.config.property("jwt.audience").getString()
 
     val userService : UserService by inject()
-    val profileService : ProfileService by inject()
 
 
     routing {
         createUser(userService)
         loginUser(userService,issuer,audience,secret)
-        getUserProfile(profileService)
+        getUserProfile(userService)
+        updateUser(userService)
     }
 }
