@@ -1,9 +1,14 @@
 package com.ugisozols.service
 
+import com.ugisozols.data.models.Categories
+import com.ugisozols.data.models.CurrentJobState
+import com.ugisozols.data.models.Education
 import com.ugisozols.data.models.User
 import com.ugisozols.data.repository.user.UserRepository
 import com.ugisozols.data.requests.AccountRequest
 import com.ugisozols.data.requests.CreateAccountRequest
+import com.ugisozols.data.requests.ProfileUpdateRequest
+import com.ugisozols.data.responses.ProfileResponse
 import com.ugisozols.util.Constants
 import com.ugisozols.util.ValidationState
 
@@ -11,7 +16,7 @@ class UserService(
     private val userRepository: UserRepository
 ) {
 
-     fun checkForPassword(actualPassword : String,passwordToCheck : String) : Boolean{
+    fun checkForPassword(actualPassword : String,passwordToCheck : String) : Boolean{
         return actualPassword == passwordToCheck
     }
 
@@ -19,8 +24,9 @@ class UserService(
         return userRepository.getUserByEmail(email)
     }
 
-
-
+    suspend fun getUserById(id : String): User?{
+        return userRepository.getUserById(id)
+    }
 
     suspend fun userWithThatEmailAlreadyExists(email : String) : Boolean{
         return userRepository.getUserByEmail(email) != null
@@ -33,19 +39,19 @@ class UserService(
                 password = request.password,
                 name = "",
                 lastName = "",
-                education = null,
+                education = Education(""),
                 profession = "",
                 experience = null,
                 profileImageUrl = "",
                 bio = "",
-                instagramUrl = null,
-                linkedInUrl = null,
-                githubUrl = null,
+                instagramUrl = "",
+                linkedInUrl = "",
+                githubUrl = "",
                 skills = listOf(),
-                currentJobState = null,
+                currentJobState = CurrentJobState(""),
                 profileUpdateDate = null,
                 keywords = listOf(),
-                category = null
+                category = Categories("")
             )
         )
     }
@@ -67,6 +73,63 @@ class UserService(
 
     }
 
+    suspend fun checkIfUsersIdIsEqualToProfileId(userId : String, callUserId: String) : Boolean{
+        return userRepository.checkIfUserIdBelongsToAccessTokensUserId(userId,callUserId)
+    }
 
+
+    suspend fun getUsersProfile(userId : String) : ProfileResponse? {
+        val user = userRepository.getUserById(userId = userId) ?: return null
+        return ProfileResponse(
+            id = user.id,
+            name = user.name,
+            lastName = user.lastName,
+            education = user.education,
+            profession = user.profession.orEmpty(),
+            experience = user.experience,
+            profileImageUrl = user.profileImageUrl,
+            bio = user.bio,
+            instagramUrl = user.instagramUrl,
+            linkedInUrl = user.linkedInUrl,
+            githubUrl = user.githubUrl,
+            skills = user.skills,
+            currentJobState = user.currentJobState,
+            profileUpdateDate = user.profileUpdateDate,
+            keywords = user.keywords,
+            category = user.category,
+            isOwningProfile = userId == user.id
+        )
+    }
+
+    suspend fun updateUser(userId: String, updatedRequest : ProfileUpdateRequest) : Boolean{
+        val user = userRepository.getUserById(userId)
+        if(user?.id == userId){
+            return userRepository.editUsersProfile(
+                userId,
+                User(
+                    email = user.email,
+                    password = user.password,
+                    name = updatedRequest.name,
+                    lastName = updatedRequest.lastName,
+                    education = updatedRequest.education,
+                    profession = updatedRequest.profession,
+                    experience = updatedRequest.experience,
+                    bio = updatedRequest.bio,
+                    profileImageUrl = updatedRequest.profileImageUrl,
+                    instagramUrl = updatedRequest.instagramUrl,
+                    linkedInUrl = updatedRequest.linkedInUrl,
+                    githubUrl = updatedRequest.githubUrl,
+                    skills = updatedRequest.skills,
+                    currentJobState = updatedRequest.currentJobState,
+                    profileUpdateDate = System.currentTimeMillis(),
+                    keywords = updatedRequest.keywords,
+                    category = updatedRequest.category,
+                    id = userId
+                )
+            )
+        }else{
+            return false
+        }
+    }
 
 }
