@@ -21,4 +21,15 @@ class UserRepositoryImpl(
         val realPassword = users.findOne(User::email eq email)?.password ?: false
         return realPassword == passwordToCheck
     }
+
+    override suspend fun getUserById(userId: String): User? {
+        return users.findOne(User::id eq userId)
+    }
+    override suspend fun checkIfUserIdBelongsToAccessTokensUserId(userId: String, callUserId: String): Boolean {
+        return userId == callUserId
+    }
+
+    override suspend fun editUsersProfile(userId: String, updatedUser: User) : Boolean {
+        return users.updateOneById(userId,updatedUser).wasAcknowledged()
+    }
 }
