@@ -11,4 +11,5 @@ object Constants {
     const val ACCOUNT_CREATED = "Account Created"
     const val ERROR_PASSWORD_OR_EMAIL_INCORRECT = "Wrong email or password"
     const val ERROR_USER_NOT_FOUND = "User not found"
+    const val ERROR_ACCESS_DENIED = "Access Denied"
 }
