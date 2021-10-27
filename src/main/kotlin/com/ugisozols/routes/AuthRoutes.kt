@@ -122,17 +122,18 @@ fun Route.loginUser(
             val expiresIn = 1000L * 60L * 60L * 24L * 365L
             val token = JWT.create()
                 .withClaim("userId", user.id)
+                .withClaim("email", user.id)
                 .withAudience(jwtAudience)
                 .withIssuer(jwtIssuer)
                 .withExpiresAt(Date(System.currentTimeMillis() + expiresIn))
                 .sign(Algorithm.HMAC256(jwtSecret))
-            val decToken = JWT.decode(token)
             call.respond(
                 HttpStatusCode.OK,
                 MainApiResponse(
                     true,
                     data = AuthResponse(
                         userId = user.id,
+                        email = user.email,
                         token= token
                     )
                 )
