@@ -24,8 +24,12 @@ fun Route.updateUser(
                 call.respond(HttpStatusCode.BadRequest)
                 return@post
             }
-            val callerUserId = call.parameters[QueryParameters.QUERY_PARAM_USER_ID]
-            if(!userService.checkIfUsersIdIsEqualToProfileId(callerUserId ?: "",call.userId?: "")){
+            val calledUserId = call.parameters[QueryParameters.QUERY_PARAM_USER_ID]
+            if(calledUserId == null || calledUserId.isBlank()){
+                call.respond(HttpStatusCode.BadRequest)
+                return@post
+            }
+            if(!userService.checkIfUsersIdIsEqualToProfileId(calledUserId ?: "",call.userId?: "")){
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     MainApiResponse<Unit>(
