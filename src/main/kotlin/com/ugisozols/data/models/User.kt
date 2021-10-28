@@ -21,6 +21,7 @@ data class User(
     val profileUpdateDate : Long?,
     val keywords : List<Keywords> = listOf(),
     val category : Categories?,
+    val isUpdated : Boolean,
     @BsonId
     val id : String = ObjectId().toString()
 )

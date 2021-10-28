@@ -20,4 +20,5 @@ data class ProfileUpdateRequest(
     val profileUpdateDate : Long?,
     val keywords : List<Keywords> = listOf(),
     val category : Categories?,
+    val isUpdated : Boolean
 )

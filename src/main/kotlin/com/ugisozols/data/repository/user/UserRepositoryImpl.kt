@@ -32,4 +32,8 @@ class UserRepositoryImpl(
     override suspend fun editUsersProfile(userId: String, updatedUser: User) : Boolean {
         return users.updateOneById(userId,updatedUser).wasAcknowledged()
     }
+
+    override suspend fun getAllUpdatedUsers(): List<User> {
+        return users.find(User::isUpdated eq true).toList()
+    }
 }

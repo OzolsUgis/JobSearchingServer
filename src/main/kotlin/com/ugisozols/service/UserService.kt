@@ -10,6 +10,7 @@ import com.ugisozols.data.requests.CreateAccountRequest
 import com.ugisozols.data.requests.ProfileUpdateRequest
 import com.ugisozols.data.responses.ProfileResponse
 import com.ugisozols.data.responses.PublicAccountResponse
+import com.ugisozols.data.responses.UserListItemResponse
 import com.ugisozols.util.Constants
 import com.ugisozols.util.ValidationState
 import io.ktor.http.*
@@ -49,7 +50,8 @@ class UserService(
                 currentJobState = CurrentJobState(""),
                 profileUpdateDate = null,
                 keywords = listOf(),
-                category = Categories("")
+                category = Categories(""),
+                isUpdated = false
             )
         )
     }
@@ -94,7 +96,6 @@ class UserService(
         )
     }
 
-
     suspend fun getUsersProfile(userId : String) : ProfileResponse? {
         val user = userRepository.getUserById(userId = userId) ?: return null
         return ProfileResponse(
@@ -113,8 +114,7 @@ class UserService(
             currentJobState = user.currentJobState,
             profileUpdateDate = user.profileUpdateDate,
             keywords = user.keywords,
-            category = user.category,
-            isOwningProfile = userId == user.id
+            category = user.category
         )
     }
 
@@ -141,12 +141,28 @@ class UserService(
                     profileUpdateDate = System.currentTimeMillis(),
                     keywords = updatedRequest.keywords,
                     category = updatedRequest.category,
+                    isUpdated = updatedRequest.isUpdated,
                     id = userId
                 )
             )
         }else{
             return false
         }
+    }
+
+    suspend fun getAllUsers() : List<UserListItemResponse>{
+        return userRepository.getAllUpdatedUsers().map { user ->
+            UserListItemResponse(
+                id = user.id,
+                name = user.name,
+                lastName = user.lastName,
+                profession = user.profession,
+                experience = user.experience,
+                education = user.education,
+                currentJobState = user.currentJobState
+            )
+        }
+
     }
 
 }

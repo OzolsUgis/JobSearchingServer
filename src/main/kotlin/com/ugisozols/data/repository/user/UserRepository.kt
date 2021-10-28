@@ -9,5 +9,6 @@ interface UserRepository {
     suspend fun getUserById(userId : String) : User?
     suspend fun checkIfUserIdBelongsToAccessTokensUserId(userId : String , callUserId : String) : Boolean
     suspend fun editUsersProfile(userId : String, updatedUser: User) : Boolean
+    suspend fun getAllUpdatedUsers() : List<User>
 
 }

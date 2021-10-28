@@ -18,8 +18,9 @@ fun Application.configureRouting() {
     routing {
         createUser(userService)
         loginUser(userService,issuer,audience,secret)
-        getUserProfile(userService)
+        getUserPublic(userService)
         updateUser(userService)
-        getUserRoute(userService)
+        getUserPrivate(userService)
+        getAllUsers(userService)
     }
 }
