@@ -29,7 +29,7 @@ fun Route.updateUser(
                 call.respond(HttpStatusCode.BadRequest)
                 return@post
             }
-            if(!userService.checkIfUsersIdIsEqualToProfileId(calledUserId ?: "",call.userId?: "")){
+            if(!userService.checkIfUsersIdIsEqualToProfileId(calledUserId,call.userId?: "")){
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     MainApiResponse<Unit>(
