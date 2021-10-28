@@ -9,8 +9,10 @@ import com.ugisozols.data.requests.AccountRequest
 import com.ugisozols.data.requests.CreateAccountRequest
 import com.ugisozols.data.requests.ProfileUpdateRequest
 import com.ugisozols.data.responses.ProfileResponse
+import com.ugisozols.data.responses.PublicAccountResponse
 import com.ugisozols.util.Constants
 import com.ugisozols.util.ValidationState
+import io.ktor.http.*
 
 class UserService(
     private val userRepository: UserRepository
@@ -22,10 +24,6 @@ class UserService(
 
     suspend fun getUserByEmail(email: String): User?{
         return userRepository.getUserByEmail(email)
-    }
-
-    suspend fun getUserById(id : String): User?{
-        return userRepository.getUserById(id)
     }
 
     suspend fun userWithThatEmailAlreadyExists(email : String) : Boolean{
@@ -75,6 +73,25 @@ class UserService(
 
     suspend fun checkIfUsersIdIsEqualToProfileId(userId : String, callUserId: String) : Boolean{
         return userRepository.checkIfUserIdBelongsToAccessTokensUserId(userId,callUserId)
+    }
+
+    suspend fun getUsersPublicProfile(userId: String) : PublicAccountResponse?{
+        val user = userRepository.getUserById(userId) ?: return null
+        return PublicAccountResponse(
+            name = user.name,
+            lastName = user.lastName,
+            profession = user.profession ?: "",
+            profileImageUrl = user.profileImageUrl,
+            instagramUrl = user.instagramUrl,
+            linkedInUrl = user.linkedInUrl,
+            githubUrl = user.githubUrl,
+            bio = user.bio,
+            experience = user.experience,
+            education = user.education,
+            skills = user.skills,
+            currentJobState = user.currentJobState,
+            profileUpdateDate = user.profileUpdateDate
+        )
     }
 
 

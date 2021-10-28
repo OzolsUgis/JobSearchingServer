@@ -20,5 +20,6 @@ fun Application.configureRouting() {
         loginUser(userService,issuer,audience,secret)
         getUserProfile(userService)
         updateUser(userService)
+        getUserRoute(userService)
     }
 }
