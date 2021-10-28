@@ -5,15 +5,13 @@ import com.ugisozols.data.models.CurrentJobState
 import com.ugisozols.data.models.Education
 import com.ugisozols.data.models.User
 import com.ugisozols.data.repository.user.UserRepository
-import com.ugisozols.data.requests.AccountRequest
 import com.ugisozols.data.requests.CreateAccountRequest
 import com.ugisozols.data.requests.ProfileUpdateRequest
 import com.ugisozols.data.responses.ProfileResponse
 import com.ugisozols.data.responses.PublicAccountResponse
-import com.ugisozols.data.responses.UserListItemResponse
+import com.ugisozols.data.responses.UserListResponse
 import com.ugisozols.util.Constants
 import com.ugisozols.util.ValidationState
-import io.ktor.http.*
 
 class UserService(
     private val userRepository: UserRepository
@@ -150,9 +148,9 @@ class UserService(
         }
     }
 
-    suspend fun getAllUsers() : List<UserListItemResponse>{
+    suspend fun getAllUsers() : List<UserListResponse>{
         return userRepository.getAllUpdatedUsers().map { user ->
-            UserListItemResponse(
+            UserListResponse(
                 id = user.id,
                 name = user.name,
                 lastName = user.lastName,

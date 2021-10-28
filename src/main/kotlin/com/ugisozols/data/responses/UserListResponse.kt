@@ -3,7 +3,7 @@ package com.ugisozols.data.responses
 import com.ugisozols.data.models.CurrentJobState
 import com.ugisozols.data.models.Education
 
-data class UserListItemResponse(
+data class UserListResponse(
     val id : String,
     val name : String,
     val lastName : String,
