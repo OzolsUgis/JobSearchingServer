@@ -34,6 +34,11 @@ dependencies {
     // Koin - dependency injection
     implementation ("io.insert-koin:koin-ktor:$koin_version")
 
+    // Testing
+    implementation ("io.insert-koin:koin-test:$koin_version")
+    implementation ("io.insert-koin:koin-test-junit4:$koin_version")
+    implementation ("com.google.truth:truth:1.1.3")
+
     // KMongo
     implementation("org.litote.kmongo:kmongo:$kmongo_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
