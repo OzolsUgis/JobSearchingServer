@@ -39,6 +39,9 @@ dependencies {
     implementation ("io.insert-koin:koin-test-junit4:$koin_version")
     implementation ("com.google.truth:truth:1.1.3")
 
+    // Gson
+    implementation ("com.google.code.gson:gson:2.8.9")
+
     // KMongo
     implementation("org.litote.kmongo:kmongo:$kmongo_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
