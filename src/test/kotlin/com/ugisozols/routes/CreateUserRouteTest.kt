@@ -9,6 +9,8 @@ import com.ugisozols.di.testModule
 import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
 import com.ugisozols.util.Constants.ERROR_EMAIL_ALREADY_EXISTS
+import com.ugisozols.util.Constants.ERROR_FIELDS_EMPTY
+import com.ugisozols.util.createUser
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.routing.*
@@ -57,14 +59,9 @@ internal class CreateUserRouteTest : KoinTest {
     }
 
     @Test
-    fun `Create user, email already exists, responds with unsuccessful`()=runBlocking{
+    fun `Create user, email already exists, responds with unsuccessful`(){
 
-        val user = CreateAccountRequest(
-            "Test@test.com",
-            password = "123456789",
-            confirmedPassword = "123456789"
-        )
-        userService.createUser(user)
+       createUser(userService)
         withTestApplication(
             moduleFunction = {
                 configureSerialization()
@@ -92,6 +89,38 @@ internal class CreateUserRouteTest : KoinTest {
             assertThat(response.successful).isFalse()
             assertThat(response.message).isEqualTo(ERROR_EMAIL_ALREADY_EXISTS)
 
+        }
+    }
+
+    @Test
+    fun `Create user, field empty, responds with unsuccessful`(){
+        createUser(userService)
+        withTestApplication(
+            moduleFunction = {
+                configureSerialization()
+                install(Routing){
+                    createUser(userService)
+                }
+            }
+        ) {
+            val testUserCall = CreateAccountRequest(
+                "",
+                "123456789",
+                "123456789"
+            )
+            val request = handleRequest(
+                HttpMethod.Post,
+                uri = "/api/userAuth/createUser"
+            ) {
+                addHeader(HttpHeaders.ContentType,"application/json")
+                setBody(gson.toJson(testUserCall))
+            }
+            val response = gson.fromJson(
+                request.response.content ?: "",
+                MainApiResponse::class.java
+            )
+            assertThat(response.successful).isFalse()
+            assertThat(response.message).isEqualTo(ERROR_FIELDS_EMPTY)
         }
     }
 }
