@@ -1,29 +1,28 @@
-package com.ugisozols.routes
+package com.ugisozols.routes.login
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import com.google.gson.Gson
 import com.typesafe.config.ConfigFactory
 import com.ugisozols.data.requests.AccountRequest
-import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.di.testModule
-import com.ugisozols.plugins.configureSerialization
+import com.ugisozols.routes.loginUser
 import com.ugisozols.service.UserService
 import com.ugisozols.util.Constants
+import com.ugisozols.util.Constants.ERROR_PASSWORD_OR_EMAIL_INCORRECT
 import io.ktor.application.*
 import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.routing.*
 import io.ktor.server.testing.*
+import org.junit.Test
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Test
 
-
-internal class AuthRoutesKtTest : KoinTest {
+internal class LoginUserRouteTest: KoinTest{
 
     private val userService by inject<UserService>()
     private val gson = Gson()
@@ -35,18 +34,19 @@ internal class AuthRoutesKtTest : KoinTest {
     private val secret = configEnvironment.config.property("jwt.secret").getString()
     private val audience = configEnvironment.config.property("jwt.audience").getString()
 
-        @BeforeTest
-        fun setUp(){
-            startKoin {
-                modules(testModule)
-            }
+    @BeforeTest
+    fun setUp(){
+        startKoin {
+            modules(testModule)
         }
+    }
 
 
     @AfterTest
     fun tearDown(){
         stopKoin()
     }
+
 
     @Test
     fun `Login, no body attached, responds with badRequest`(){
@@ -67,45 +67,37 @@ internal class AuthRoutesKtTest : KoinTest {
                 method = HttpMethod.Post,
                 uri = "api/userAuth/loginUser"
             )
-            assertThat(request.response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            Truth.assertThat(request.response.status()).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
 
     @Test
     fun `Login, field empty, responds with unsuccessful`(){
-        withTestApplication(
-            moduleFunction = {
-                configureSerialization()
-                install(Routing){
-                    loginUser(
-                        userService,
-                        issuer,
-                        audience,
-                        secret
-                    )
-                }
-            }
-        ){
-            val request =  handleRequest(
-                method = HttpMethod.Post,
-                uri = "api/userAuth/loginUser"
-            ){
-                val loginRequest = AccountRequest(
-                    "Test@test.com",
-                    ""
-                )
-                addHeader(HttpHeaders.ContentType, "application/json")
-                setBody(gson.toJson(loginRequest))
-            }
-            val response = gson.fromJson(
-                request.response.content ?: "",
-                MainApiResponse::class.java
+        val loginRequest =
+            AccountRequest (
+                "Test@test.com",
+                ""
             )
-            assertThat(response.successful).isFalse()
-            assertThat(response.message).isEqualTo(Constants.ERROR_FIELDS_EMPTY)
-        }
+        testingLoginErrors(
+            userService,
+            loginRequest,
+            Constants.ERROR_FIELDS_EMPTY
+        )
     }
 
+    @Test
+    fun `Login, email or password incorrect, responds with unsuccessful`(){
+        val loginRequest =
+            AccountRequest(
+                email = "Test@test.com",
+                password = "123456789"
+            )
+        testingLoginErrors(
+            userService,
+            loginRequest,
+            ERROR_PASSWORD_OR_EMAIL_INCORRECT
+        )
+    }
 
 
 }
