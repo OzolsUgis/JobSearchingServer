@@ -21,6 +21,11 @@ object JWTConfig {
     private val algorithm = Algorithm.HMAC512(secret)
     private val expiresIn = 1000L * 60L * 60L * 24L * 365L
 
+    val verifier: JWTVerifier = JWT
+        .require(algorithm)
+        .withIssuer(issuer)
+        .build()
+
     fun createToken(user : AccountRequest) : String = JWT.create()
         .withIssuer(issuer)
         .withClaim("email", user.email)
