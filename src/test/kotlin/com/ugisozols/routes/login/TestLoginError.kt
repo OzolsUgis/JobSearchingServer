@@ -7,6 +7,7 @@ import com.ugisozols.data.requests.AccountRequest
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.routes.loginUser
+import com.ugisozols.routes.util.JWTConfig
 import com.ugisozols.service.UserService
 import com.ugisozols.util.Constants
 import io.ktor.application.*
@@ -15,13 +16,7 @@ import io.ktor.http.*
 import io.ktor.routing.*
 import io.ktor.server.testing.*
 
-private val configEnvironment = createTestEnvironment() {
-    config = HoconApplicationConfig(ConfigFactory.load("application.conf"))
 
-}
-private val issuer = configEnvironment.config.property("jwt.issuer").getString()
-private val secret = configEnvironment.config.property("jwt.secret").getString()
-private val audience = configEnvironment.config.property("jwt.audience").getString()
 private val gson = Gson()
 
 
@@ -36,9 +31,9 @@ fun testingLoginErrors(
             install(Routing){
                 loginUser(
                     userService,
-                    issuer,
-                    audience,
-                    secret
+                    JWTConfig.issuer,
+                    JWTConfig.audience,
+                    JWTConfig.secret
                 )
             }
         }
