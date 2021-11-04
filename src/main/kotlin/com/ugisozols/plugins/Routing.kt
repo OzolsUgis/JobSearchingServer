@@ -24,6 +24,6 @@ fun Application.configureRouting() {
         updateUser(userService)
         getUserPrivate(userService)
         getAllUsers(userService)
-        sortByCategory(sortService = sortService)
+        sortByCategoryAndKeywords(sortService)
     }
 }

@@ -157,7 +157,8 @@ class UserService(
                 profession = user.profession,
                 experience = user.experience,
                 education = user.education,
-                currentJobState = user.currentJobState
+                currentJobState = user.currentJobState,
+                keywords = user.keywords
             )
         }
 
