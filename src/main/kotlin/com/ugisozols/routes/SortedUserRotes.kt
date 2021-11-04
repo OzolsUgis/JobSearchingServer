@@ -7,7 +7,7 @@ import com.ugisozols.data.requests.SortByCategoryRequest
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.data.responses.UserListResponse
 import com.ugisozols.service.SortService
-import com.ugisozols.util.Constants.ERROR_EMPTY_CATEGORY
+import com.ugisozols.util.ApiResponses.ERROR_EMPTY_CATEGORY
 import com.ugisozols.util.QueryParameters
 import com.ugisozols.util.QueryParameters.QUERY_PARAM_KEYWORDS
 import io.ktor.application.*

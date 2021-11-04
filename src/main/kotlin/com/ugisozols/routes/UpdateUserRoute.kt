@@ -5,7 +5,7 @@ import com.ugisozols.data.requests.ProfileUpdateRequest
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.service.UserService
 import com.ugisozols.util.Constants
-import com.ugisozols.util.Constants.ERROR_ACCESS_DENIED
+import com.ugisozols.util.ApiResponses.ERROR_ACCESS_DENIED
 import com.ugisozols.util.QueryParameters
 import io.ktor.application.*
 import io.ktor.auth.*

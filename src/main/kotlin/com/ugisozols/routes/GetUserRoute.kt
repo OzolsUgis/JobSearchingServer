@@ -2,14 +2,14 @@ package com.ugisozols.routes
 
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.service.UserService
-import com.ugisozols.util.Constants
+import com.ugisozols.util.ApiResponses
 import com.ugisozols.util.QueryParameters
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import sun.applet.Main
+
 
 fun Route.getUserPublic(
     userService: UserService
@@ -47,7 +47,7 @@ fun Route.getUserPrivate(
                     HttpStatusCode.OK,
                     MainApiResponse<Unit>(
                         false,
-                        Constants.ERROR_USER_NOT_FOUND
+                        ApiResponses.ERROR_USER_NOT_FOUND
                     )
                 )
                 return@get
@@ -60,7 +60,7 @@ fun Route.getUserPrivate(
                     HttpStatusCode.Unauthorized,
                     MainApiResponse<Unit>(
                         false,
-                        Constants.ERROR_ACCESS_DENIED
+                        ApiResponses.ERROR_ACCESS_DENIED
                     )
                 )
                 return@get
