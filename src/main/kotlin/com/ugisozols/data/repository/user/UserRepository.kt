@@ -11,5 +11,6 @@ interface UserRepository {
     suspend fun checkIfUserIdBelongsToAccessTokensUserId(userId : String , callUserId : String) : Boolean
     suspend fun editUsersProfile(userId : String,userPicture : String?, updatedUser: ProfileUpdateRequest) : Boolean
     suspend fun getAllUpdatedUsers() : List<User>
+    suspend fun deleteUser(userId: String) : Boolean
 
 }

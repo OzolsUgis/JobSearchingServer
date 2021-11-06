@@ -62,4 +62,8 @@ class UserRepositoryImpl(
     override suspend fun getAllUpdatedUsers(): List<User> {
         return users.find(User::isUpdated eq true).toList()
     }
+
+    override suspend fun deleteUser(userId: String): Boolean {
+        return users.deleteOneById(userId).wasAcknowledged()
+    }
 }

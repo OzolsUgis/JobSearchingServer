@@ -146,4 +146,8 @@ class UserService(
 
     }
 
+    suspend fun deleteUser(userId: String) : Boolean{
+        return userRepository.deleteUser(userId)
+    }
+
 }

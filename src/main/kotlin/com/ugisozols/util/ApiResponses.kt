@@ -11,4 +11,5 @@ object ApiResponses {
     const val ERROR_USER_NOT_FOUND = "User not found"
     const val ERROR_ACCESS_DENIED = "Access Denied"
     const val ERROR_EMPTY_CATEGORY = "Empty category field"
+    const val USER_DELETED = "User successfully deleted "
 }

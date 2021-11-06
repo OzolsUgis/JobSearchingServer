@@ -26,6 +26,7 @@ fun Application.configureRouting() {
         getUserPrivate(userService)
         getAllUsers(userService)
         sortByCategoryAndKeywords(sortService)
+        deleteRoute(userService)
 
         static {
             resources("static")
