@@ -1,5 +1,6 @@
 package com.ugisozols.data.repository.user
 
+import com.ugisozols.data.models.Categories
 import com.ugisozols.data.models.User
 import com.ugisozols.data.requests.ProfileUpdateRequest
 import org.litote.kmongo.coroutine.CoroutineDatabase
@@ -65,5 +66,9 @@ class UserRepositoryImpl(
 
     override suspend fun deleteUser(userId: String): Boolean {
         return users.deleteOneById(userId).wasAcknowledged()
+    }
+
+    override suspend fun getUsersByCategory(category: Categories): List<User> {
+        return users.find(User::category eq category).toList()
     }
 }

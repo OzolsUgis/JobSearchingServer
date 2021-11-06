@@ -1,5 +1,6 @@
 package com.ugisozols.data.repository.user
 
+import com.ugisozols.data.models.Categories
 import com.ugisozols.data.models.User
 import com.ugisozols.data.requests.ProfileUpdateRequest
 
@@ -12,5 +13,6 @@ interface UserRepository {
     suspend fun editUsersProfile(userId : String,userPicture : String?, updatedUser: ProfileUpdateRequest) : Boolean
     suspend fun getAllUpdatedUsers() : List<User>
     suspend fun deleteUser(userId: String) : Boolean
+    suspend fun getUsersByCategory(category : Categories) : List<User>
 
 }

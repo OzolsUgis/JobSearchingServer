@@ -1,7 +1,6 @@
 package com.ugisozols.plugins
 
 import com.ugisozols.routes.*
-import com.ugisozols.service.SortService
 import com.ugisozols.service.UserService
 import io.ktor.routing.*
 import io.ktor.application.*
@@ -15,7 +14,6 @@ fun Application.configureRouting() {
     val audience = environment.config.property("jwt.audience").getString()
 
     val userService : UserService by inject()
-    val sortService : SortService by inject()
 
 
     routing {
@@ -25,7 +23,7 @@ fun Application.configureRouting() {
         updateUser(userService)
         getUserPrivate(userService)
         getAllUsers(userService)
-        sortByCategoryAndKeywords(sortService)
+        sortByCategoryAndKeywords(userService)
         deleteRoute(userService)
 
         static {

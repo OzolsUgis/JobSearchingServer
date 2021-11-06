@@ -150,4 +150,19 @@ class UserService(
         return userRepository.deleteUser(userId)
     }
 
+    suspend fun getUsersByCategory(categories: Categories): List<UserListResponse>{
+        return userRepository.getUsersByCategory(categories).map { user ->
+            UserListResponse(
+                id = user.id,
+                name = user.name,
+                lastName = user.lastName,
+                profession = user.profession,
+                experience = user.experience,
+                education = user.education,
+                currentJobState = user.currentJobState,
+                keywords = user.keywords
+            )
+        }
+    }
+
 }
