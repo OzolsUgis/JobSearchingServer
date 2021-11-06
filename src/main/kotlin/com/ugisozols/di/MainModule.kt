@@ -1,6 +1,7 @@
 package com.ugisozols.di
 
 
+import com.google.gson.Gson
 import com.ugisozols.data.repository.sort.SortRepository
 import com.ugisozols.data.repository.sort.SortRepositoryImpl
 import com.ugisozols.util.Constants
@@ -29,4 +30,6 @@ val mainModule = module {
     single {
         SortService(get())
     }
+
+    single{Gson()}
 }

@@ -3,7 +3,6 @@ package com.ugisozols.routes
 import com.ugisozols.data.models.Categories
 import com.ugisozols.data.models.Keywords
 import com.ugisozols.data.models.User
-import com.ugisozols.data.requests.SortByCategoryRequest
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.data.responses.UserListResponse
 import com.ugisozols.service.SortService

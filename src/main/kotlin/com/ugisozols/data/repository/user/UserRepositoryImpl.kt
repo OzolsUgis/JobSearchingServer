@@ -1,8 +1,10 @@
 package com.ugisozols.data.repository.user
 
 import com.ugisozols.data.models.User
+import com.ugisozols.data.requests.ProfileUpdateRequest
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import javax.jws.soap.SOAPBinding
 
 class UserRepositoryImpl(
     db: CoroutineDatabase
@@ -29,8 +31,32 @@ class UserRepositoryImpl(
         return userId == callUserId
     }
 
-    override suspend fun editUsersProfile(userId: String, updatedUser: User) : Boolean {
-        return users.updateOneById(userId,updatedUser).wasAcknowledged()
+    override suspend fun editUsersProfile(userId: String, userPicture : String?, updatedUser: ProfileUpdateRequest) : Boolean {
+        val user = getUserById(userId) ?: return false
+        return users.updateOneById(
+            id = userId,
+            update = User(
+                email = user.email,
+                password = user.password,
+                name = updatedUser.name,
+                lastName = updatedUser.lastName,
+                education = updatedUser.education,
+                profession = updatedUser.profession,
+                experience = updatedUser.experience,
+                profileImageUrl = userPicture ?: user.profileImageUrl,
+                bio = updatedUser.bio,
+                instagramUrl = updatedUser.instagramUrl,
+                linkedInUrl = updatedUser.linkedInUrl,
+                githubUrl = updatedUser.githubUrl,
+                skills = updatedUser.skills,
+                currentJobState = updatedUser.currentJobState,
+                profileUpdateDate = System.currentTimeMillis(),
+                keywords = updatedUser.keywords,
+                category = updatedUser.category,
+                isUpdated = true,
+                id = user.id
+            )
+        ).wasAcknowledged()
     }
 
     override suspend fun getAllUpdatedUsers(): List<User> {

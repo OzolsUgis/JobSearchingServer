@@ -1,5 +1,6 @@
 package com.ugisozols.service
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const
 import com.ugisozols.data.models.Categories
 import com.ugisozols.data.models.CurrentJobState
 import com.ugisozols.data.models.Education
@@ -11,7 +12,9 @@ import com.ugisozols.data.responses.ProfileResponse
 import com.ugisozols.data.responses.PublicAccountResponse
 import com.ugisozols.data.responses.UserListResponse
 import com.ugisozols.util.Constants
+import com.ugisozols.util.Constants.DEFAULT_PROFILE_PICTURE
 import com.ugisozols.util.ValidationState
+import io.netty.util.Constant
 
 class UserService(
     private val userRepository: UserRepository
@@ -39,7 +42,7 @@ class UserService(
                 education = Education(""),
                 profession = "",
                 experience = null,
-                profileImageUrl = "",
+                profileImageUrl =DEFAULT_PROFILE_PICTURE,
                 bio = "",
                 instagramUrl = "",
                 linkedInUrl = "",
@@ -116,36 +119,12 @@ class UserService(
         )
     }
 
-    suspend fun updateUser(userId: String, updatedRequest : ProfileUpdateRequest) : Boolean{
-        val user = userRepository.getUserById(userId)
-        if(user?.id == userId){
-            return userRepository.editUsersProfile(
-                userId,
-                User(
-                    email = user.email,
-                    password = user.password,
-                    name = updatedRequest.name,
-                    lastName = updatedRequest.lastName,
-                    education = updatedRequest.education,
-                    profession = updatedRequest.profession,
-                    experience = updatedRequest.experience,
-                    bio = updatedRequest.bio,
-                    profileImageUrl = updatedRequest.profileImageUrl,
-                    instagramUrl = updatedRequest.instagramUrl,
-                    linkedInUrl = updatedRequest.linkedInUrl,
-                    githubUrl = updatedRequest.githubUrl,
-                    skills = updatedRequest.skills,
-                    currentJobState = updatedRequest.currentJobState,
-                    profileUpdateDate = System.currentTimeMillis(),
-                    keywords = updatedRequest.keywords,
-                    category = updatedRequest.category,
-                    isUpdated = updatedRequest.isUpdated,
-                    id = userId
-                )
-            )
-        }else{
-            return false
-        }
+    suspend fun updateUser(
+        userId: String,
+        userPicture : String?,
+        updateProfileRequest: ProfileUpdateRequest
+    ): Boolean {
+        return userRepository.editUsersProfile(userId, userPicture, updateProfileRequest)
     }
 
     suspend fun getAllUsers() : List<UserListResponse>{
