@@ -112,10 +112,9 @@ fun Route.loginUser(
         }
 
         val passwordIsCorrect = userService.checkForPassword(
-            actualPassword = user.password,
+            email = request.email,
             passwordToCheck = request.password
         )
-
 
 
         if(passwordIsCorrect){
@@ -139,6 +138,7 @@ fun Route.loginUser(
                 )
             )
         } else {
+            println("This is test")
             call.respond(
                 HttpStatusCode.OK,
                 MainApiResponse<Unit>(

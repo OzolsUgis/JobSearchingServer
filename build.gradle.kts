@@ -43,6 +43,9 @@ dependencies {
     // Gson
     implementation ("com.google.code.gson:gson:2.8.9")
 
+    //Security
+    implementation ("commons-codec:commons-codec:1.14")
+
     // KMongo
     implementation("org.litote.kmongo:kmongo:$kmongo_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")

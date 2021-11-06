@@ -14,14 +14,17 @@ import com.ugisozols.data.responses.UserListResponse
 import com.ugisozols.util.Constants
 import com.ugisozols.util.Constants.DEFAULT_PROFILE_PICTURE
 import com.ugisozols.util.ValidationState
+import com.ugisozols.util.security.passwordDecoding
+import com.ugisozols.util.security.passwordHashing
 import io.netty.util.Constant
 
 class UserService(
     private val userRepository: UserRepository
 ) {
 
-    fun checkForPassword(actualPassword : String,passwordToCheck : String) : Boolean{
-        return actualPassword == passwordToCheck
+    suspend fun checkForPassword(email: String,passwordToCheck : String) : Boolean{
+        val actualPassword = getUserByEmail(email)?.password ?: return false
+        return passwordDecoding(passwordToCheck,actualPassword)
     }
 
     suspend fun getUserByEmail(email: String): User?{
@@ -36,7 +39,7 @@ class UserService(
         userRepository.createUser(
             User(
                 email = request.email,
-                password = request.password,
+                password = passwordHashing(request.password),
                 name = "",
                 lastName = "",
                 education = Education(""),
