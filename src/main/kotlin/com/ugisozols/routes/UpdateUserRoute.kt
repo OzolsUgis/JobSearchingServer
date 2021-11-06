@@ -1,15 +1,11 @@
 package com.ugisozols.routes
 
 import com.google.gson.Gson
-import com.ugisozols.data.models.User
 import com.ugisozols.data.requests.ProfileUpdateRequest
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.service.UserService
-import com.ugisozols.util.Constants
-import com.ugisozols.util.ApiResponses.ERROR_ACCESS_DENIED
 import com.ugisozols.util.Constants.BASE_URL
 import com.ugisozols.util.Constants.PROFILE_PICTURE_PATH
-import com.ugisozols.util.QueryParameters
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -18,7 +14,6 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
-import sun.applet.Main
 import java.io.File
 import java.util.*
 

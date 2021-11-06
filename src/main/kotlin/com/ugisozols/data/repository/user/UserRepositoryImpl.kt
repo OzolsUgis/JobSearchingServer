@@ -5,7 +5,6 @@ import com.ugisozols.data.models.User
 import com.ugisozols.data.requests.ProfileUpdateRequest
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
-import javax.jws.soap.SOAPBinding
 
 class UserRepositoryImpl(
     db: CoroutineDatabase

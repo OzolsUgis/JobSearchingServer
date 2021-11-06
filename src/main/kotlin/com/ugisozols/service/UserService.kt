@@ -1,6 +1,5 @@
 package com.ugisozols.service
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const
 import com.ugisozols.data.models.Categories
 import com.ugisozols.data.models.CurrentJobState
 import com.ugisozols.data.models.Education
@@ -16,7 +15,7 @@ import com.ugisozols.util.Constants.DEFAULT_PROFILE_PICTURE
 import com.ugisozols.util.ValidationState
 import com.ugisozols.util.security.passwordDecoding
 import com.ugisozols.util.security.passwordHashing
-import io.netty.util.Constant
+
 
 class UserService(
     private val userRepository: UserRepository
