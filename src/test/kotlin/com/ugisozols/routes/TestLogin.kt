@@ -2,19 +2,15 @@ package com.ugisozols.routes
 
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
-import com.typesafe.config.ConfigFactory
 import com.ugisozols.data.requests.AccountRequest
-import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.di.fakeModule
-import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
-import com.ugisozols.util.ApiResponses
 import com.ugisozols.util.ApiResponses.ERROR_FIELDS_EMPTY
 import com.ugisozols.util.ApiResponses.ERROR_PASSWORD_OR_EMAIL_INCORRECT
 import com.ugisozols.util.JWTConfig
+import com.ugisozols.util.createMockUser
 import com.ugisozols.util.testError
 import io.ktor.application.*
-import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.routing.*
 import io.ktor.server.testing.*
@@ -92,5 +88,26 @@ internal class TestLogin : KoinTest {
             requestedUser = requestedUser,
             error = ERROR_PASSWORD_OR_EMAIL_INCORRECT
         )
+    }
+
+    @Test
+    fun `Login, password incorrect, should respond with error`(){
+        createMockUser(userService)
+        val request = AccountRequest(
+            email = "Test@test.com",
+            password = "randomPassword"
+        )
+        testError(
+            route ={
+                loginUser(userService, JWTConfig.issuer,JWTConfig.audience,JWTConfig.secret)
+            },
+            method = HttpMethod.Post,
+            uri = "api/user/login",
+            requestedUser = request,
+            error = ERROR_PASSWORD_OR_EMAIL_INCORRECT
+
+        )
+
+
     }
 }

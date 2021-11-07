@@ -11,10 +11,12 @@ import com.ugisozols.service.UserService
 import com.ugisozols.util.ApiResponses.ACCOUNT_CREATED
 import com.ugisozols.util.ApiResponses.ERROR_EMAIL_ALREADY_EXISTS
 import com.ugisozols.util.ApiResponses.ERROR_EMAIL_DOES_NOT_CONTAIN_EMAIL_CHARS
+import com.ugisozols.util.ApiResponses.ERROR_EMPTY_CATEGORY
 import com.ugisozols.util.ApiResponses.ERROR_FIELDS_EMPTY
 import com.ugisozols.util.ApiResponses.ERROR_PASSWORDS_DO_NOT_MATCH
 import com.ugisozols.util.ApiResponses.ERROR_PASSWORD_IS_TOO_SHORT
 import com.ugisozols.util.ApiResponses.ERROR_PASSWORD_OR_EMAIL_INCORRECT
+import com.ugisozols.util.ApiResponses.USER_DELETED
 import com.ugisozols.util.ValidationState
 import io.ktor.application.*
 import io.ktor.http.*
