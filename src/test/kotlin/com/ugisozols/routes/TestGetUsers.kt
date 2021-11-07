@@ -7,6 +7,7 @@ import com.ugisozols.data.responses.PublicAccountResponse
 import com.ugisozols.di.fakeModule
 import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
+import com.ugisozols.util.createMockUpdatedUser
 import com.ugisozols.util.createMockUser
 import com.ugisozols.util.getUsersId
 import io.ktor.application.*
@@ -82,6 +83,31 @@ class TestGetUsers : KoinTest {
             assertThat(response.successful).isTrue()
             assertThat(response.data).isNotNull()
             println("Fake user got by id " + response.data)
+        }
+    }
+
+    @Test
+    fun `Get all users, should respond with list of users`(){
+        createMockUpdatedUser(userService)
+        withTestApplication(
+            moduleFunction = {
+                configureSerialization()
+                install(Routing){
+                    getAllUsers(userService)
+                }
+            }
+        ) {
+            val request = handleRequest(
+                HttpMethod.Get,
+                uri = "/api/user/getAllUsers"
+            )
+            val response = gson.fromJson(
+                request.response.content?: "",
+                MainApiResponse::class.java
+            )
+            assertThat(response.successful).isTrue()
+            assertThat(response.data).isNotNull()
+            print("List of Users" + response.data)
         }
     }
 
