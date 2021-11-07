@@ -28,7 +28,7 @@ import kotlin.test.BeforeTest
 
 
 
-internal class TestAuthRoutes : KoinTest {
+internal class TestCreateUser : KoinTest {
     private val userService by inject<UserService>()
     private val gson : Gson = Gson()
 
