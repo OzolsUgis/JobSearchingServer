@@ -2,9 +2,12 @@ package com.ugisozols.routes
 
 import com.google.common.truth.Truth.assertThat
 import com.typesafe.config.ConfigFactory
+import com.ugisozols.data.requests.AccountRequest
 import com.ugisozols.di.fakeModule
 import com.ugisozols.service.UserService
+import com.ugisozols.util.ApiResponses.ERROR_FIELDS_EMPTY
 import com.ugisozols.util.JWTConfig
+import com.ugisozols.util.testError
 import io.ktor.application.*
 import io.ktor.config.*
 import io.ktor.http.*
@@ -51,5 +54,20 @@ internal class TestLogin : KoinTest {
         }
     }
 
-
+    @Test
+    fun `Login, fields empty, should respond with error`(){
+        val request = AccountRequest(
+            email = "",
+            password = "123456789"
+        )
+        testError(
+            route = {
+                loginUser(userService, JWTConfig.issuer,JWTConfig.audience,JWTConfig.secret)
+            },
+            method = HttpMethod.Post,
+            uri = "api/user/login",
+            requestedUser = request,
+            error = ERROR_FIELDS_EMPTY
+        )
+    }
 }
