@@ -1,11 +1,16 @@
 package com.ugisozols.routes
 
 import com.google.common.truth.Truth.assertThat
+import com.google.gson.Gson
 import com.typesafe.config.ConfigFactory
 import com.ugisozols.data.requests.AccountRequest
+import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.di.fakeModule
+import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
+import com.ugisozols.util.ApiResponses
 import com.ugisozols.util.ApiResponses.ERROR_FIELDS_EMPTY
+import com.ugisozols.util.ApiResponses.ERROR_PASSWORD_OR_EMAIL_INCORRECT
 import com.ugisozols.util.JWTConfig
 import com.ugisozols.util.testError
 import io.ktor.application.*
@@ -23,6 +28,7 @@ import org.junit.Test
 
 internal class TestLogin : KoinTest {
     private val userService by inject<UserService>()
+    private val gson = Gson()
 
 
     @BeforeTest
@@ -68,6 +74,23 @@ internal class TestLogin : KoinTest {
             uri = "api/user/login",
             requestedUser = request,
             error = ERROR_FIELDS_EMPTY
+        )
+    }
+
+    @Test
+    fun `Login, user email is not found , should respond with error`(){
+        val requestedUser = AccountRequest(
+            email = "randomString",
+            password = "123456789"
+        )
+        testError(
+            route = {
+                loginUser(userService, JWTConfig.issuer,JWTConfig.audience,JWTConfig.secret)
+            },
+            method = HttpMethod.Post,
+            uri = "api/user/login",
+            requestedUser = requestedUser,
+            error = ERROR_PASSWORD_OR_EMAIL_INCORRECT
         )
     }
 }
