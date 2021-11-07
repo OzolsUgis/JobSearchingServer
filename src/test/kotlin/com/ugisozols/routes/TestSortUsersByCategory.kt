@@ -8,6 +8,7 @@ import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
 import com.ugisozols.util.ApiResponses
 import com.ugisozols.util.ApiResponses.ERROR_EMPTY_CATEGORY
+import com.ugisozols.util.createMockUpdatedUser
 import io.ktor.application.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -58,6 +59,31 @@ class TestSortUsersByCategory : KoinTest {
             )
             assertThat(request.response.status()).isEqualTo(HttpStatusCode.BadRequest)
             assertThat(response.message).isEqualTo(ERROR_EMPTY_CATEGORY)
+        }
+    }
+
+    @Test
+    fun `Get users by category, empty keywords query parameter , should respond with users sorted by category`(){
+        createMockUpdatedUser(userService)
+        withTestApplication(
+            moduleFunction = {
+                configureSerialization()
+                install(Routing){
+                    sortByCategoryAndKeywords(userService)
+                }
+            }
+        ) {
+            val requestedQuery = "?category=test"
+            val request = handleRequest(
+                method = HttpMethod.Get,
+                uri = "api/users/getUserByCategory${requestedQuery}"
+            )
+            val response = gson.fromJson(
+                request.response.content?: "",
+                MainApiResponse::class.java
+            )
+            assertThat(response.successful).isTrue()
+            assertThat(response.data).isNotNull()
         }
     }
 
