@@ -7,6 +7,9 @@ import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.di.fakeModule
 import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
+import com.ugisozols.util.ApiResponses.ERROR_EMAIL_ALREADY_EXISTS
+import com.ugisozols.util.createMockUser
+import com.ugisozols.util.testError
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.routing.*
@@ -53,6 +56,23 @@ internal class TestAuthRoutes : KoinTest {
             }
             assertThat(request.response.status()).isEqualTo(HttpStatusCode.BadRequest)
         }
+    }
+
+    @Test
+    fun `Create User, email already exists, should respond with error`(){
+        createMockUser(userService)
+        val requestedUser = CreateAccountRequest(
+            email = "Test@test.com",
+            password = "123456789",
+            confirmedPassword = "123456789"
+        )
+        testError(
+            route = { createUser(userService)},
+            method = HttpMethod.Post,
+            uri = "api/user/create",
+            requestedUser = requestedUser,
+            error = ERROR_EMAIL_ALREADY_EXISTS
+        )
     }
 
     @Test
