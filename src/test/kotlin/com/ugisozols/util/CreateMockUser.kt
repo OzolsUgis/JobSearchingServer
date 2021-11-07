@@ -2,7 +2,6 @@ package com.ugisozols.util
 
 import com.ugisozols.data.models.Categories
 import com.ugisozols.data.models.Keywords
-import com.ugisozols.data.models.Skills
 import com.ugisozols.data.requests.CreateAccountRequest
 import com.ugisozols.data.requests.ProfileUpdateRequest
 import com.ugisozols.service.UserService
@@ -15,6 +14,10 @@ fun createMockUser(userService: UserService) = runBlocking{
         confirmedPassword = "123456789"
     )
     userService.createUser(user)
+}
+
+fun getUsersId (userService: UserService)= runBlocking {
+    userService.getUserByEmail("Test@test.com")
 }
 
 fun createMockUpdatedUser(userService: UserService) = runBlocking {
@@ -42,3 +45,7 @@ fun createMockUpdatedUser(userService: UserService) = runBlocking {
     )
     userService.updateUser(userId,"",user)
 }
+
+
+
+
