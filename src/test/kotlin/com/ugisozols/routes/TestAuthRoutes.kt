@@ -37,6 +37,24 @@ internal class TestAuthRoutes : KoinTest {
         stopKoin()
     }
 
+
+    @Test
+    fun `Create User, no body attached, should respond with bad request `(){
+        withTestApplication(
+            moduleFunction = {
+                install(Routing){
+                    createUser(userService)
+                }
+            }
+        ) {
+            val request = handleRequest {
+                method = HttpMethod.Post
+                uri = "api/user/create"
+            }
+            assertThat(request.response.status()).isEqualTo(HttpStatusCode.BadRequest)
+        }
+    }
+
     @Test
     fun `Create user, valid data, responds with successful`(){
         withTestApplication(
@@ -49,7 +67,7 @@ internal class TestAuthRoutes : KoinTest {
         ) {
             val request = handleRequest(
                 method = HttpMethod.Post,
-                uri = "api/userAuth/createUser"
+                uri = "api/user/create"
             ) {
                 addHeader(HttpHeaders.ContentType, "application/json")
                 val request = CreateAccountRequest(
