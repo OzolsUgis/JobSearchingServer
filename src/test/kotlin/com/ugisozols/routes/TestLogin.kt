@@ -3,7 +3,6 @@ package com.ugisozols.routes
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
 import com.ugisozols.data.requests.AccountRequest
-import com.ugisozols.data.responses.AuthResponse
 import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.di.fakeModule
 import com.ugisozols.plugins.configureSerialization
@@ -17,7 +16,6 @@ import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.routing.*
 import io.ktor.server.testing.*
-import io.ktor.util.reflect.*
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
