@@ -25,7 +25,7 @@ import java.util.*
 
 
 fun Route.createUser(userService: UserService){
-    post("api/userAuth/createUser"){
+    post("api/user/create"){
         val request = call.receiveOrNull<CreateAccountRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest)
             return@post
@@ -85,7 +85,7 @@ fun Route.loginUser(
     jwtSecret : String
 
 ){
-    post("api/userAuth/loginUser") {
+    post("api/user/login") {
         val request  = call.receiveOrNull<AccountRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest)
             return@post
@@ -138,7 +138,6 @@ fun Route.loginUser(
                 )
             )
         } else {
-            println("This is test")
             call.respond(
                 HttpStatusCode.OK,
                 MainApiResponse<Unit>(
