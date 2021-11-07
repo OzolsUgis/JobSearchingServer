@@ -11,6 +11,7 @@ import com.ugisozols.util.ApiResponses.ERROR_EMAIL_ALREADY_EXISTS
 import com.ugisozols.util.ApiResponses.ERROR_EMAIL_DOES_NOT_CONTAIN_EMAIL_CHARS
 import com.ugisozols.util.ApiResponses.ERROR_FIELDS_EMPTY
 import com.ugisozols.util.ApiResponses.ERROR_PASSWORDS_DO_NOT_MATCH
+import com.ugisozols.util.ApiResponses.ERROR_PASSWORD_IS_TOO_SHORT
 import com.ugisozols.util.createMockUser
 import com.ugisozols.util.testError
 import io.ktor.application.*
@@ -124,6 +125,23 @@ internal class TestAuthRoutes : KoinTest {
             error = ERROR_PASSWORDS_DO_NOT_MATCH,
         )
     }
+
+    @Test
+    fun `Create user,password is too short, should respond with error`(){
+        val request = CreateAccountRequest(
+            email = "Test@test.com",
+            password = "12345",
+            confirmedPassword = "12345"
+        )
+        testError(
+            route = { createUser(userService) },
+            method = HttpMethod.Post,
+            uri = "api/user/create",
+            requestedUser = request,
+            error = ERROR_PASSWORD_IS_TOO_SHORT,
+        )
+    }
+
 
     @Test
     fun `Create user, valid data, responds with successful`(){
