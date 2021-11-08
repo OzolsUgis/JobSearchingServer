@@ -149,5 +149,32 @@ class TestGetUsers : KoinTest {
         }
     }
 
+    @Test
+    fun`Get private user, userId query is not attached, should respond with bad request`(){
+        createMockUpdatedUser(userService)
+        val login = loginIntoMockUser(userService)
+        withTestApplication(
+            moduleFunction ={
+                install(Authentication){
+                    configureTestSecurity()
+                }
+                configureSerialization()
+                install(Routing) {
+                    getUserPrivate(userService)
+                }
+            }
+        ){
+            val getUserRequest = handleRequest(
+                method = HttpMethod.Get,
+                uri = "api/user/profile/private/get"
+            ) {
+                addHeader(HttpHeaders.Authorization, "Bearer ${login.token}")
+            }
+            assertThat(getUserRequest.response.status()).isEqualTo(HttpStatusCode.BadRequest)
+
+        }
+
+    }
+
 
 }
