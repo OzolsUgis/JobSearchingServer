@@ -16,6 +16,15 @@ fun createMockUser(userService: UserService) = runBlocking{
     userService.createUser(user)
 }
 
+fun createSecondUser(userService: UserService) = runBlocking{
+        val user = CreateAccountRequest(
+            email = "Username@test.com",
+            password = "123456789",
+            confirmedPassword = "123456789"
+        )
+        userService.createUser(user)
+    }
+
 fun getUsersId (userService: UserService)= runBlocking {
     userService.getUserByEmail("Test@test.com")
 }

@@ -16,7 +16,7 @@ import io.ktor.server.testing.*
 
 
 
-fun loginIntoMockUser(userService: UserService) : AuthResponse {
+fun loginIntoMockUser(userService: UserService, email : String) : AuthResponse {
     val gson = Gson()
     var authResponse : AuthResponse? = null
     withTestApplication {
@@ -29,7 +29,7 @@ fun loginIntoMockUser(userService: UserService) : AuthResponse {
             }
         ) {
             val requestedLogin = AccountRequest(
-                "Test@test.com",
+                email,
                 "123456789"
             )
             val loginRequest = handleRequest(
