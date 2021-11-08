@@ -10,11 +10,8 @@ import com.ugisozols.di.fakeModule
 import com.ugisozols.plugins.configureSecurity
 import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
-import com.ugisozols.util.JWTConfig
+import com.ugisozols.util.*
 import com.ugisozols.util.JWTConfig.configureTestSecurity
-import com.ugisozols.util.createMockUpdatedUser
-import com.ugisozols.util.createMockUser
-import com.ugisozols.util.getUsersId
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -123,6 +120,7 @@ class TestGetUsers : KoinTest {
     @Test
     fun `Get private user, authentication and userId valid, should respond with call response`(){
         createMockUpdatedUser(userService)
+        val login = loginIntoMockUser(userService)
         withTestApplication(
             moduleFunction ={
                 install(Authentication){
@@ -130,38 +128,16 @@ class TestGetUsers : KoinTest {
                 }
                 configureSerialization()
                 install(Routing) {
-                    loginUser(userService, JWTConfig.issuer, JWTConfig.audience, JWTConfig.secret)
                     getUserPrivate(userService)
-
                 }
         }
         ) {
-            val requestedLogin = AccountRequest(
-                "Test@test.com",
-                "123456789"
-            )
-            val loginRequest = handleRequest(
-                method = HttpMethod.Post,
-                uri = "api/user/login"
-            ) {
-                addHeader(HttpHeaders.ContentType, "application/json")
-                setBody(gson.toJson(requestedLogin))
-                }
-            val loginResponse = gson.fromJson(
-                loginRequest.response.content?: "",
-                MainApiResponse::class.java
-                )
-            val authResponse = gson.fromJson(
-                loginResponse.data.toString(),
-                AuthResponse::class.java
-            )
-            val requestedUserIdQuery = "?userId=${authResponse.userId}"
-
+            val requestedUserIdQuery = "?userId=${login.userId}"
             val getUserRequest = handleRequest(
                 method = HttpMethod.Get,
                 uri = "api/user/profile/private/get$requestedUserIdQuery"
             ) {
-                addHeader(HttpHeaders.Authorization, "Bearer ${authResponse.token}")
+                addHeader(HttpHeaders.Authorization, "Bearer ${login.token}")
             }
             val userResponse = gson.fromJson(
                 getUserRequest.response.content?: "",
@@ -172,5 +148,6 @@ class TestGetUsers : KoinTest {
 
         }
     }
+
 
 }
