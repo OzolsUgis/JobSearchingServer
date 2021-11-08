@@ -3,14 +3,13 @@ package com.ugisozols.routes
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
 import com.ugisozols.data.requests.DeleteUserRequest
+import com.ugisozols.data.responses.MainApiResponse
 import com.ugisozols.di.fakeModule
 import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
+import com.ugisozols.util.*
+import com.ugisozols.util.ApiResponses.USER_DELETED
 import com.ugisozols.util.JWTConfig.configureTestSecurity
-import com.ugisozols.util.createMockUpdatedUser
-import com.ugisozols.util.createMockUser
-import com.ugisozols.util.createSecondUser
-import com.ugisozols.util.loginIntoMockUser
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -96,6 +95,43 @@ class TestDeleteUser : KoinTest {
                 setBody(gson.toJson(requestUserId))
             }
             assertThat(requestToDelete.response.status()).isEqualTo(HttpStatusCode.Unauthorized)
+
+        }
+    }
+
+    @Test
+    fun `Delete user, request successful, should respond with user deleted response`(){
+        createMockUpdatedUser(userService)
+        val login = loginIntoMockUser(userService, "Test@test.com")
+        withTestApplication(
+            moduleFunction = {
+                install(Authentication){
+                    configureTestSecurity()
+                }
+                configureSerialization()
+                install(Routing){
+                    deleteRoute(userService)
+                }
+            }
+        ) {
+            val requestUserId = DeleteUserRequest(
+                login.userId
+            )
+            val requestToDelete = handleRequest(
+                method = HttpMethod.Post,
+                uri = "api/users/delete"
+            ) {
+                addHeader(HttpHeaders.Authorization, "Bearer ${login.token}")
+                addHeader(HttpHeaders.ContentType, "application/json")
+                setBody(gson.toJson(requestUserId))
+            }
+            val response = gson.fromJson(
+                requestToDelete.response.content?: "",
+                MainApiResponse::class.java
+            )
+            assertThat(response.successful).isTrue()
+            assertThat(response.message).isEqualTo(USER_DELETED)
+
 
         }
     }
