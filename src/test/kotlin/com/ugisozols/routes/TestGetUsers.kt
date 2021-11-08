@@ -11,6 +11,7 @@ import com.ugisozols.plugins.configureSecurity
 import com.ugisozols.plugins.configureSerialization
 import com.ugisozols.service.UserService
 import com.ugisozols.util.*
+import com.ugisozols.util.ApiResponses.ERROR_USER_NOT_FOUND
 import com.ugisozols.util.JWTConfig.configureTestSecurity
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -176,5 +177,36 @@ class TestGetUsers : KoinTest {
 
     }
 
+    @Test
+    fun `Get private user, userId do not exist, should respond with user not found error`() {
+        createMockUpdatedUser(userService)
+        val login = loginIntoMockUser(userService)
+        withTestApplication(
+            moduleFunction = {
+                install(Authentication) {
+                    configureTestSecurity()
+                }
+                configureSerialization()
+                install(Routing) {
+                    getUserPrivate(userService)
+                }
+            }
+        ) {
+            val randomUserId = "Username"
+            val requestedUserIdQuery = "?userId=$randomUserId"
+            val getUserRequest = handleRequest(
+                method = HttpMethod.Get,
+                uri = "api/user/profile/private/get$requestedUserIdQuery"
+            ) {
+                addHeader(HttpHeaders.Authorization, "Bearer ${login.token}")
+            }
+            val userResponse = gson.fromJson(
+                getUserRequest.response.content ?: "",
+                MainApiResponse::class.java
+            )
+            assertThat(userResponse.successful).isFalse()
+            assertThat(userResponse.message).isEqualTo(ERROR_USER_NOT_FOUND)
+        }
+    }
 
 }
