@@ -75,6 +75,7 @@ For testing routes :
 For observing database : 
 * [MongoDB Compass](https://www.mongodb.com/products/compass)
 
+<p align="right" dir="auto">(<a href="#top">back to top</a>)</p>
 
 ## Getting Started
 ### Prerequisites 
@@ -170,7 +171,7 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
         ![profuct-screenshot](https://live.staticflickr.com/65535/51671936448_17c60d183d.jpg)
         
         
-        
+        <p align="right" dir="auto">(<a href="#top">back to top</a>)</p>
         
     ### Login example
     
@@ -256,6 +257,7 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
           ``` 
           
      
+     <p align="right" dir="auto">(<a href="#top">back to top</a>)</p>
      
      ### Update user
      
@@ -323,6 +325,7 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
           ![product-screenshot](https://live.staticflickr.com/65535/51672347936_d95b53f47c_z.jpg)
           
           
+          <p align="right" dir="auto">(<a href="#top">back to top</a>)</p>
    ## Contacts
 
      Ugis Ozols - ugisozols.97@gmail.com , LinkedIn - www.linkedin.com/in/uģis-ozols-2192a8226
