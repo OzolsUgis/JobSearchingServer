@@ -25,7 +25,13 @@
           <li><a href="#registration-example">Registration example</a></li>
         </ul> 
         <ul>
-          <li><a href="#installation">Installation</a></li>
+          <li><a href="#login-example">Login example</a></li>
+        </ul>
+        <ul>
+          <li><a href="#get-users-profile">Get users profile</a></li>
+        </ul>
+        <ul>
+          <li><a href="#update-profile">Update profile</a></li>
         </ul>
     </li> 
     <li>
@@ -123,6 +129,8 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
     
     ## Usage
     
+    
+    
     ### Registration example
     
     * This example will show how to register user:
@@ -137,7 +145,6 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
         ```
         You can do it with Postman using JSON 
         
-        For example
         ```json
         {
            "email":"Test@test.com",
@@ -162,4 +169,101 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
         ![profuct-screenshot](https://live.staticflickr.com/65535/51671936448_17c60d183d.jpg)
         
         
-   
+        
+        
+    ### Login example
+    
+    * This example will show how to login in users account:
+    
+        In this example you will need `AccountRequest` 
+        ```kotlin
+        data class AccountRequest(
+            val email : String,
+            val password : String
+        )
+        ```
+        ```json
+        {
+          "email":"Test@test.com",
+          "password":"ThisIsTestPassword"
+        }
+        ```
+        
+        When you will send this request you will recieve `MainApiResponse` where in `data` field is specified `AuthResponse`
+        
+        ```json
+        {
+          "successful": true,
+          "data": {
+                "userId": "618cf7fb61c5875f146e0bbb", 
+                "email": "Test@test.com", 
+                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJtYWluIiwiaXNzIjoiaHR0cDovLzAuMC4wLjA6ODA4MC8iLCJleHAiOjE2NjgxNjU1NTcsInVzZXJJZCI6IjYxOGNmN2ZiNjFjNTg3NWYxNDZlMGJiYiIsImVtYWlsIjoiNjE4Y2Y3ZmI2MWM1ODc1ZjE0NmUwYmJiIn0.bCofF0EkYgZOwik3gezUPols6gUTVpopUj5jmYEsrng"
+                // Users token for authorization
+          }
+        }
+        ```
+        
+        
+        
+    ### Get users profile
+    
+      * Get users profile functionality seperates in 2 pieces (Get public profile, and Get private profile)
+
+          ** Public profile is response what unauthorized user gets when pass in UsersId for query
+          
+          ** Private profile is when authorized user access hes own profile
+          
+          In this example, authorized user access hes own profile: 
+          
+      * You will need: QueryParameter which contains UserID, you can get that in successful login response 
+          
+          Assign users id to request in Postman you need to specify `BASE_URL` with `Route`. and as a request select GET request
+      
+          ![product-screenshot](https://live.staticflickr.com/65535/51672061843_f7af5b210e_c.jpg)
+          
+          To specify userID in params block write KEY `userId` and VALUE `618cf7fb61c5875f146e0bbb`, like you see in example above - This value is user id what you got from successful login request
+          
+      * To access your own profile you need to pass Authorization security for that we need addHeaders to our request, that contains our TOKEN
+
+
+          ![product-screenshot](https://live.staticflickr.com/65535/51672691715_4eb4d043b3_c.jpg)
+          
+          In Headers block you need to specify KEY  `Authorization` and VALUE `Bearer //Input token here//`
+          
+          !!! Check if between Bearer and token is only one white space
+          
+          Response will be Empty User in `ProfileReponse` 
+          ```kotlin 
+          data class ProfileResponse(
+              val id : String,
+              val name : String,
+              val lastName : String,
+              val profession : String,
+              val profileImageUrl : String?,
+              val instagramUrl : String?,
+              val linkedInUrl : String?,
+              val githubUrl : String?,
+              val bio : String?,
+              val experience : Int?,
+              val education : Education?,
+              val skills : List<Skills> = listOf(),
+              val currentJobState : CurrentJobState? = null,
+              val profileUpdateDate : Long?,
+              val keywords : List<Keywords> = listOf(),
+              val category : Categories?
+          )
+          ``` 
+          
+     
+     
+     ### Update user
+     
+      * This will be multipart put request where you can send Form Data (TEXT & FILE) for updating user profile information and picture 
+
+          Out dated user looks like this :
+          
+          ![profuct-screenshot](https://live.staticflickr.com/65535/51671936448_17c60d183d.jpg)
+          
+          
+          
+          
