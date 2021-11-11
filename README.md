@@ -19,9 +19,16 @@
           <li><a href="#installation">Installation</a></li>
         </ul>
     </li> 
-        <li>
-      <a href='#usage'>Usage</a> 
-    </li>
+ <li>
+      <a href='#usage'>Usage</a>
+        <ul>
+          <li><a href="#registration">Registration example</a></li>
+        </ul> 
+        <ul>
+          <li><a href="#installation">Installation</a></li>
+        </ul>
+    </li> 
+    <li>
     <li>
       <a href='#contacts'>Contacts</a> 
     </li>
@@ -113,4 +120,46 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
     
     
     If you dont understand what jwt properties are you can look up for information in [Json Web Tokens](https://ktor.io/docs/jwt.html)
+    
+    ## Usage
+    
+    ### Registration example
+    
+    * This example will show how to register user:
+    
+        For this request you will need CreateAccountRequest attached to your endpoint `"api/user/create"`
+        ```kotlin 
+        data class CreateAccountRequest(
+          val email : String,
+          val password : String,
+          val confirmedPassword : String
+        )
+        ```
+        You can do it with Postman using JSON 
+        
+        For example
+        ```json
+        {
+           "email":"Test@test.com",
+           "password":"ThisIsTestPassword",
+           "confirmedPassword":"ThisIsTestPassword"
+        }
+        ```
+        ! Email string need to contain `@` and `.` chars, if not there will be error.
+        
+        ! Passord must be atleast 8 units long.
+        
+        When you send request you will recieve response like following or any other response if there is some error. You can see all errors in `ApiResponses` object  
+        ```json
+        {
+            "successful": true,
+            "message": "Account Created"
+        }
+        ```
+       
+        
+        And this is how it looks like in DB, you can observe it in MongoDB compass
+        ![profuct-screenshot](https://live.staticflickr.com/65535/51671936448_17c60d183d.jpg)
+        
+        
    
