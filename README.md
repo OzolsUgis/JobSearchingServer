@@ -22,7 +22,7 @@
  <li>
       <a href='#usage'>Usage</a>
         <ul>
-          <li><a href="#registration">Registration example</a></li>
+          <li><a href="#registration example">Registration example</a></li>
         </ul> 
         <ul>
           <li><a href="#installation">Installation</a></li>
