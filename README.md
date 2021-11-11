@@ -35,7 +35,6 @@
         </ul>
     </li> 
     <li>
-    <li>
       <a href='#contacts'>Contacts</a> 
     </li>
   </ol>
@@ -126,6 +125,8 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
     
     
     If you dont understand what jwt properties are you can look up for information in [Json Web Tokens](https://ktor.io/docs/jwt.html)
+    
+   <p align="right" dir="auto">(<a href="#top">back to top</a>)</p>
     
     ## Usage
     
@@ -260,9 +261,78 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
      
       * This will be multipart put request where you can send Form Data (TEXT & FILE) for updating user profile information and picture 
 
-          Out dated user looks like this :
+          Outdated user looks like this :
           
           ![profuct-screenshot](https://live.staticflickr.com/65535/51671936448_17c60d183d.jpg)
+          
+      To update user in Postman you must do following : 
+      
+      * Specify user id in Params block you want to update in Query parameter 
+          
+          As a KEY insert `userId` and VALUE insert userId 
+          
+          ![product-screenshot](https://live.staticflickr.com/65535/51672550083_65bf76be76_c.jpg)
+          
+      * Add authorization header in Headers block 
+          
+          As a KEY insert `Authorization` and in VALUE field insert `Bearer //insert token here//`
+          
+          ![product-screenshot](https://live.staticflickr.com/65535/51672309831_50d99ed13e_c.jpg)
+          
+      * Add Body in Body Form-data: 
+          
+          As a KEY you must select type TEXT and insert key `profile_update`. And in VALUE you need to pass JSON data string. Like following: 
+          ```json
+            {
+                "id": "618689bd3f4886646510390b",
+                "name": "Peter",
+                "lastName": "Davis",
+                "education":{"name": "Google Associate android developer "},
+                "profession": "Backend Developer",
+                "experience" : 3,
+                "profileImageUrl": "http://192.168.8.103:8080/profile_pictures/default_profile_picture.png",
+                "instagramUrl": "Test web page",
+                "linkedInUrl": "Test web page",
+                "githubUrl": "Test web page",
+                "bio": "Want to start job in some great IT company, my strengths are Backend development in Ktor using Kotlin language.",
+                "skills": [
+                    {
+                        "name": "Java"
+                    },
+                    {
+                        "name": "Kotlin"
+                    },
+                    {
+                        "name": "C#"
+                     }
+                 ],
+                "keywords": [{"name":"Android"},{"name":"Java"}],
+                "category": {
+                    "name": "IT"
+                }
+            }
+          ```
+          ![product-screenshot](https://live.staticflickr.com/65535/51672550058_c50c48c3be_c.jpg)
+          
+          If you want to change your profile picture you must attach another KEY `picture_update`of type File and upload file. 
+          
+          ![product-screenshot](https://live.staticflickr.com/65535/51673179995_48f28a7f7f_c.jpg)
+          
+          After request you can check your data in MongoDB Compass and it should look like this 
+          
+          ![product-screenshot](https://live.staticflickr.com/65535/51672347936_d95b53f47c_z.jpg)
+          
+          
+   ## Contacts
+
+     Ugis Ozols - ugisozols.97@gmail.com , LinkedIn - www.linkedin.com/in/uģis-ozols-2192a8226
+
+
+     Project Link - https://github.com/OzolsUgis/JobSearchingServer
+
+      
+          
+       
           
           
           
