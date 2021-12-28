@@ -328,7 +328,7 @@ you can find installation in : [IntelliJ IDEA](https://www.jetbrains.com/idea/do
           <p align="right" dir="auto">(<a href="#top">back to top</a>)</p>
    ## Contacts
 
-     Ugis Ozols - ugisozols.97@gmail.com , LinkedIn - www.linkedin.com/in/uģis-ozols-2192a8226
+     Ugis Ozols - ozols.ugis@outlook.com , LinkedIn - www.linkedin.com/in/uģis-ozols-2192a8226
 
 
      Project Link - https://github.com/OzolsUgis/JobSearchingServer
